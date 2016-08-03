@@ -1,17 +1,47 @@
+# solr 操作
+
+## 1 安装 jdk
+```bash
+wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u101-b13/jdk-8u101-linux-x64.rpm
+
+http://download.oracle.com/otn-pub/java/jdk/8u101-b13/jdk-8u101-linux-x64.rpm
+rpm -i jdk-8u101-linux-x64.rpm
+java -version 
+版本是sunjdk 1.8
+```
+## 2 下载安装solr
+
+```bash
+5.3
 wget "http://apache.fayea.com/lucene/solr/5.3.1/solr-5.3.1.zip"
-http://apache.fayea.com/lucene/solr/4.10.4/solr-4.10.4.zip
-启动solr
+4.10
+wget http://apache.fayea.com/lucene/solr/4.10.4/solr-4.10.4.zip
+6.1
+wget http://mirror.bit.edu.cn/apache/lucene/solr/6.1.0/solr-6.1.0.zip
+
+## 3 启动solr
+
+5.3版本
 root/solr-5.3.1/bin/solr start -e cloud -noprompt -m 3g -a "-XX:MaxDirectMemorySize=2g"
+
+6.1版本 上面的命令有问题
+bin/solr -e cloud -noprompt
+
 /停止solr/
 /root/solr-5.3.1/bin/solr stop -all
-索引
+
+## 4 索引
+
 solr-5.3.1/bin/post -c gettingstarted docs/
 
+## 5 创建core
 
 /root/solr-5.3.1/bin/solr create_core -c doctor -d /root/solr-5.3.1/conf
 /root/solr-5.3.1/bin/solr delete -c doctor
+
 ----------------------------------------------------------------------
-分词 IK-Analyzer
+
+# 分词 IK-Analyzer
 
 cp IKAnalyzer2012FF_u2.jar ./solr-5.3.1/server/solr-webapp/webapp/libs/
 mkdir ./solr-5.3.1/server/solr-webapp/webapp/WEB-INF/classes
@@ -19,8 +49,9 @@ cp IKAnalyzer.cfg.xml stopword.dic ./solr-5.3.1/server/solr-webapp/webapp/WEB-IN
 
   
 ----------------------------------------------------------------------------
-mongodb
+# 连接 mongodb
 
+## 1 安装mongodb 
 Replica Set
 
 /root/mongodb/bin/mongod --dbpath /root/mongo/data/db1 --logpath /root/mongo/log1/mongo.log --port 27020 --replSet solrT --fork
@@ -38,24 +69,25 @@ config = {_id:"solrT",members:[
  rs.status()
 
 -------------------------------------------------------
-CentOS6.4 安装 mongo-connector
+## 2 CentOS6.4 安装 mongo-connector
 
 mongo-connector在python2.6.6版本下安装不成功，官方测试2.7,3.3正常
 
-需要升级python2.7
+### 需要升级python2.7
 
 具体步骤：
 
-安装开发工具包：
+#### 安装开发工具包：
 yum groupinstall "Development tools"
 yum install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel
 （编译安装python2.7.5，没有zlib-devel,可以编译成功，但是当程序有调用zlib的时候会报tarfile.ReadError: file could not be opened successfully）
 
-安装python，修改yum相关内容，文章中最后拷贝rpm包如果yum正常可以省略（我的正常）
+#### 安装python，修改yum相关内容，文章中最后拷贝rpm包如果yum正常可以省略（我的正常）
 
 参见http://www.linuxidc.com/Linux/2013-05/84727.htm
 
 python就绪之后
+
 
  github 下载 源码
 
@@ -66,7 +98,7 @@ python就绪之后
 
 
 
-因开发需要，今天把CentOS 6.4自带的Python2.6.6升级到了Python2.7.3.按照如下步骤进行升级
+#### 因开发需要，今天把CentOS 6.4自带的Python2.6.6升级到了Python2.7.3.按照如下步骤进行升级
 
 1、查看当前系统python的版本
 
@@ -119,7 +151,7 @@ vi /usr/bin/yum
 整个升级过程完成了。
 
 -------------------------------------------------
-安装pip
+#### 安装pip
 wget --no-check-certificate https://pypi.python.org/packages/source/p/pip/pip-7.1.2.tar.gz#md5=3823d2343d9f3aaab21cf9c917710196
 tar zvxf pip-7.1.2.tar.gz
 cd pip-7.1.2
@@ -127,7 +159,7 @@ python setup.py install
 pip install pymongo
 
 -------------------------------------------------
-mongo-connector
+## mongo-connector
 mongo 连接 solr
 python
 
